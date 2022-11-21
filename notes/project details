@@ -1,0 +1,39 @@
+Creating an inventory management system
+
+We have 2 kinds of user
+    1)Admin
+    2)Staff
+
+We have Items,
+    where,
+    item consists of,
+        1) type - item type
+        2) title - what the item is
+        3) category - category of the item
+        4) quantity - no of items in stock
+            in,
+            4) quantity,
+                numbers go up and down
+                    has 2 subs
+                        1)borrow
+                            decreases quantity form stock as the item is burrowed by user
+                        2)return
+                            increases quantity as item is returned
+
+usage,
+    staff can borrow item,
+        but,
+            staff will request for an item
+            first it will be pending
+            either:
+                admin accepts
+                after admin accepts // admin will acknowledge
+                finally,
+                    item will be borrowed
+            or:
+                admin declines
+                request dropped
+    to return,
+        staff will put on return status,
+        admin will acknowledge
+        return success

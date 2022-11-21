@@ -1,0 +1,52 @@
+(continued from note_step)
+    (step 7:)
+
+for testing we install following,
+
+pip install pytest
+    #easy to test module
+
+pip install requests
+    #handel request
+
+pip install pytest-cov
+    #best one yet!!!
+    #will see later why
+
+
+first,
+    lets create
+        /tests
+            #will be used for everything about testing,
+
+        in /tests
+            add test_adminroute.py
+
+        side note:
+                    to get path of the file we can
+                        enter code:
+                            import os
+                            import sys
+                            print(os.path.abspath(__file__))
+                                #gives out path:
+                                    o/p= x/y/z.py
+                            print(__file__)
+                                #gives out file name
+                                    o/p= z.py
+                            print(os.path.dirname(os.path.abspath(__file__)))
+                                #gives out dir structure of current file z.py
+                                    1:o/p= x/y
+                            print(os.path.dirname(os.path.dirname((os.path.abspath(__file__))))
+                                #gives directory where y is from 1:o/p:
+                                    x
+        /side note
+
+
+
+
+
+step 1:
+    in test_adminroute.py,
+        #we test admin route from here
+
+            code:

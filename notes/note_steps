@@ -1,0 +1,470 @@
+pip install fastapi
+    #installing fastapi
+
+pip install uvicorn
+    #installing uvicorn
+
+pip install psycopg2-binary
+    #installing psycopg2-binary
+    #required by postgresql
+
+pip install python-dotenv
+    #installing dotenv
+        #required to pull .env into config.py
+            #will come across in step 2 regarding how and why using dotenv
+
+pip install sqlalchemy
+    #required to work with postgres
+
+pip install sqlalchemy.orm
+    #for sessionmaker
+
+step 1:
+    (creating required files)
+
+        create main.py,
+            #main file for project
+
+        create config.py
+            #to configure all requirements
+
+        create .env
+            #postgres details
+
+        create database.py
+            #for database related codes
+
+        create models.py
+            #for columns, databases and all
+
+        using pgadmin,
+        create new database as,
+        inventory_management
+            #for all database related operations
+
+step 2:
+    (coding in above created files)
+
+        in main.py,
+            initial coding
+                add code:
+                        from fastapi import FastAPI
+                        from database import engine
+                        from models import Base
+                        from config import setting
+
+                        Base.metadata.create_all(bind=engine)
+                        app = FastAPI(
+                            title=setting.TITLE,
+                            description=setting.DESCRIPTION,
+                            version=setting.VERSION,
+                            contact={
+                                "name": setting.NAME,
+                                "email": setting.EMAIL
+                            }
+                        )
+
+
+                        @app.get("/")
+                        def hello():
+                            return {"message": "hello"}
+
+
+        in .env,
+            lets give postgres details
+                add code:
+                        POSTGRES_USER=postgres
+                        POSTGRES_PASSWORD=apple123
+                        POSTGRES_SERVER=localhost
+                        POSTGRES_PORT=5432
+                        POSTGRES_DATABASE=inventory_management
+
+        in config.py,
+            lets configure database
+                add code:
+                        import os
+                        from dotenv import load_dotenv
+
+                        load_dotenv(dotenv_path=".env")
+                            #loding .env file
+
+
+                        class Settings:
+                            TITLE="Inventory Management using FastAPI"
+                            VERSION="0.0.1"
+                            DESCRIPTION="testing"
+                            NAME="user"
+                            EMAIL="samipya95@gmail.com"
+
+                            POSTGRES_USER = os.getenv("POSTGRES_USER")
+                            POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+                            POSTGRES_SERVER = os.getenv("POSTGRES_SERVER", "localhost")
+                            POSTGRES_PORT = os.getenv("POSTGRES_PORT", 5432)
+                            POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE", "inventory_management")
+                            DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}/{POSTGRES_DATABASE}"
+
+
+                        setting = Settings()
+
+        in database.py,
+            creating engine,
+            using session maker to bind engine,
+            defining declarative base,
+            injecting dependency,
+
+                code:
+                        from config import setting
+                        from sqlalchemy import create_engine
+                        from sqlalchemy.orm import sessionmaker
+                        from sqlalchemy.ext.declarative import declarative_base
+                        from typing import Generator
+
+                        SQLALCHEMY_DATABASE_URL = setting.DATABASE_URL
+
+                        engine = create_engine(SQLALCHEMY_DATABASE_URL)
+                        SessionLocal = sessionmaker(bind=engine)
+
+                        Base = declarative_base()
+
+
+                        #dependency injection
+                        def get_db() -> Generator:
+                            try:
+                                db = SessionLocal()
+                                    #created db object
+                                yield db
+                                    #return db
+                            finally:
+                                db.close()
+
+        in models.py,
+            let`s define data fields,
+                code:
+                        from database import Base
+                        from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Date
+                        from sqlalchemy.orm import relationship
+
+
+                        class Admin(Base):
+                            __tablename__ = "admin"
+
+                            id = Column(Integer, primary_key=True, index=True)
+                                #id should be primary key
+                            email = Column(String, unique=True, nullable=False, index=True)
+                                #unique as p_k is already assigned
+                                    #2 ppl can`t have same email
+                            password = Column(String, nullable=False)
+                            is_active = Column(Boolean, default=True)
+
+                            items = relationship('Items', back_populates='owner')
+
+
+                        class Items(Base):
+                            __tablename__ = "items"
+                            id = Column(Integer, primary_key=True, index=True)
+                            title = Column(String, nullable=False, unique=True)
+                            quantity = Column(Integer, nullable=False)
+                            category = Column(String)
+                            type = Column(String)
+                            date_posted= Column(Date)
+                            owner_id= Column(Integer, ForeignKey('admin.id'))
+
+                            owner = relationship('Admin', back_populates='items')
+
+    so,
+        now,
+        in terminal,
+            uvicorn main:app --reload
+
+    (initial app created/running)
+                    o/p:
+                        INFO:     Will watch for changes in these directories: ['D:\\work\\pythonProject\\inventory_management']
+                        INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+                        INFO:     Started reloader process [1908] using StatReload
+                        INFO:     Started server process [144]
+                        INFO:     Waiting for application startup.
+                        INFO:     Application startup complete.
+                        INFO:     127.0.0.1:49282 - "GET / HTTP/1.1" 200 OK
+
+            in browser
+            open
+                either:
+                    localhost:8000/
+                or:
+                    http://127.0.0.1:8000/
+
+                            o/p:
+
+                                {"message":"hello"}
+
+                    WE use lot of json so better install chrome Extension "Json Formatter"
+                        src:
+                            https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa
+
+                    after it is installed our output looks much better
+
+                            formatted o/p:
+
+                                {
+                                    "message": "hello"
+                                }
+
+        when the app runs,
+        our database is automatically created
+
+        in,
+            pgadmin,
+                Postgresql 14/inventory_management/
+                    Schemas
+                        Public
+                            Table
+                            2 tables,
+                                **admin**
+                                **items**
+                                        ARE created
+
+
+step 3:
+    (Password Hashing)
+    pip install passlib[bcrypt]
+    pip install pydantic[email]
+
+        create hashing.py
+            #for password hashing,
+            #can`t keep password open can we?
+
+
+        now,
+            in hashing.py,
+
+                add code:
+                        from passlib.context import CryptContext
+
+                        pwd_context = CryptContext(schemes='bcrypt', deprecated="auto")
+                                #using bcrypt hashing algorithm
+                                #deprecated="auto" will provide us with legacy support
+
+
+                        #hasher to get and verify hashed password
+                        class Hasher:
+
+                            @staticmethod
+                            def get_hash_password(plain_password):
+                                return pwd_context.hash(plain_password)
+
+
+                            @staticmethod
+                            def verify_password(plain_password, hash_password):
+                                return pwd_context.verify(plain_password, hash_password)
+
+        now,
+        go to python console,
+            type:
+                from hashing import Hasher
+                Hasher.get_hash_password("P@ssowrd")
+                        o/p:
+                            '$2b$12$a5g45fwj8LQJ.XJUkyNY5u/zkaXXa9CQBFtFvPKQPqKTKfOSIIciu'
+                Hasher.verify_password("P@ssowrd","$2b$12$a5g45fwj8LQJ.XJUkyNY5u/zkaXXa9CQBFtFvPKQPqKTKfOSIIciu")
+                        o/p:
+                            true
+
+                            try wrong to get false lol
+
+            our code is ok
+
+        can exit terminal now,
+
+
+
+step 4:
+    (creating BaseModel)
+
+
+        create schemas.py,
+            #defining BaseModels
+
+
+            in schemas.py,
+                add code:
+                        from pydantic import EmailStr, BaseModel
+
+
+                        class AdminCreate(BaseModel):
+                            email: EmailStr
+                            password: str
+
+
+                        class ShowAdmin(BaseModel):
+                            email: EmailStr
+                            is_active: bool
+
+                            class Config:
+                                orm_mode=True
+                                    ##orm object relationship mapper
+                                    ##object lai dictionary banayo
+
+
+
+
+step 5:
+    (creating router to create admin)
+
+    add,
+        /routers directory
+            #it will have all the routes
+
+        in /routers
+
+        create __init__.py,
+            #to make a package
+
+        create admin.py,
+            #it will contain all admin routes,
+
+
+            in admin.py
+                add code:
+                        from fastapi import APIRouter, Depends
+                        from sqlalchemy.orm import Session
+                        from schemas import AdminCreate
+                        from database import get_db
+                        from hashing import Hasher
+                        from models import Admin
+
+                        router=APIRouter()
+
+
+                        @router.get(
+                            "/admin",
+                            tags=['admin']
+                        )
+                            #tags=[....] to manage kun tag ma halnae
+                        def get_admin():
+                            return {"message": "hello"}
+
+
+                        @router.post(
+                            "/admin",
+                            tags=['admin']
+                        )
+                        def create_admin(
+                                admin: AdminCreate,
+                                db: Session = Depends(get_db)
+                        ):
+                            admin = Admin(
+                                email=admin.email,
+                                password=Hasher.get_hash_password(admin.password)
+                            )
+                            db.add(admin)
+                            db.commit()
+                            db.refresh(admin)
+                            return admin
+
+
+        now,
+        in /routers,
+
+        create items.py,
+        #it will contain all item routes,
+
+
+            in items.py
+                add code:
+                        from fastapi import APIRouter
+
+
+                        router = APIRouter()
+
+
+                        @router.get(
+                            '/items',
+                            tags=["products"]
+                        )
+                        def get_product():
+                            return {"message": "products"}
+
+
+        ok now,
+        in main.py,
+        we need to reference our routes,
+
+
+            in main.py,
+                add code:
+                        from routers import admin
+                        app.include_router(admin.router)
+
+
+    lets check our progress,
+        run
+            uvicorn main:app --routers
+
+            go to
+                localhost:8000/docs
+
+                    in swagger ui,
+                        we can see output as
+                                o/p:
+                                    check notes/ref_img/try_1
+
+                        now,
+                        admin/
+                            post/admin Create admin,
+                                create an admin
+
+                                    o/p:
+                                        {
+                                          "email": "user@example.com",
+                                          "password": "$2b$12$KG2bXQ5Wg9KS73ZynE5BeuzR/Xnz9DFq24KdTZD3PVe5ulRmFKwAa",
+                                          "is_active": true,
+                                          "id": 4
+                                        }
+
+        problem:
+            we don`t need to display
+                "password": "$2b$12$KG2bXQ5Wg9KS73ZynE5BeuzR/Xnz9DFq24KdTZD3PVe5ulRmFKwAa",
+                "id": 4
+
+
+        solution,
+        lets hide em
+
+        we already have,
+            in schemas.py
+                code:
+                    class ShowAdmin(BaseModel):
+                        email: EmailStr
+                        is_active: bool
+
+                        class Config:
+                            orm_mode=True
+
+
+        now,
+            in admin.py,
+                import ShowAdmin from schemas
+
+                edit code as
+                code:
+                    @router.post(
+                        "/admin",
+                        tags=['admin'],
+                        response_model=ShowAdmin
+                    )
+
+
+        lets reload uvicorn
+        add new admin and check response,
+
+            o/p:
+                {
+                  "email": "naya@user.com",
+                  "is_active": true
+                }
+
+                now we cool..
+
+step 6:
+    lets hit to testing now,
+    check,
+        /notes/testing/note_testing,
