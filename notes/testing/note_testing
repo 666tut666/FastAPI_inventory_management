@@ -174,3 +174,36 @@ step 1:
 
     so whenever we are testing please try to alter the email
     alter on both statements or there will be error
+
+    now,
+    (using pytest coverage to cover entire project)
+
+        alter email and run,
+
+        pytest -v --cov="." --cov-report html
+
+            o/p:
+                ======================================================================= 1 passed in 0.53s ========================================================================
+                (venv) PS D:\work\pythonProject\inventory_management> pytest -v --cov="." --cov-report html
+                ====================================================================== test session starts =======================================================================
+                platform win32 -- Python 3.9.7, pytest-7.2.0, pluggy-1.0.0 -- D:\work\pythonProject\fast_post\venv\Scripts\python.exe
+                cachedir: .pytest_cache
+                rootdir: D:\work\pythonProject\inventory_management
+                plugins: anyio-3.6.1, cov-4.0.0, xdist-3.0.2
+                collected 1 item
+
+                tests/test_adminroute.py::test_create_user PASSED                                                                                                           [100%]
+
+                ----------- coverage: platform win32, python 3.9.7-final-0 -----------
+                Coverage HTML written to dir htmlcov
+
+
+                ======================================================================= 1 passed in 0.64s ========================================================================
+
+
+    check /htmlcov
+        /index.html in browser for detailed coverage
+
+
+
+(return to note_steps)

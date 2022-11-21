@@ -464,7 +464,20 @@ step 5:
 
                 now we cool..
 
+
+
 step 6:
     lets hit to testing now,
     check,
         /notes/testing/note_testing,
+
+
+
+(continued from note_testing step 1:)
+
+
+
+step 7:
+    (creating item routes)
+        wipe off items.py,
+            add new code:

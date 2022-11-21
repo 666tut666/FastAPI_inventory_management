@@ -8,15 +8,6 @@ from models import Admin
 router=APIRouter()
 
 
-@router.get(
-    "/admin",
-    tags=['admin']
-)
-    #tags=[....] to manage kun tag ma halnae
-def get_admin():
-    return {"message": "hello"}
-
-
 @router.post(
     "/admin",
     tags=['admin'],
