@@ -19,12 +19,7 @@ class Settings:
     POSTGRES_DATABASE = os.getenv("POSTGRES_DATABASE", "inventory_management")
     DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}/{POSTGRES_DATABASE}"
 
-    SECRET_KEY = os.getenv("SECRET_KEY")
-    ALGORITHM = "HS256"
-    TEST_EMAIL = "user1@test.com"
-    TEST_PASS = "password"
-    TEST_ITEM = "test item"
-    TEST_ITEM_DEF = "item description"
+
 
 
 setting = Settings()

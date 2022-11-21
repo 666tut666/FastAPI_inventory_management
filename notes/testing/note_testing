@@ -50,3 +50,127 @@ step 1:
         #we test admin route from here
 
             code:
+                import json
+                from fastapi import status
+
+
+                def test_create_user(client):
+                    data = {"email": "test1@email.com", "password": "test1"}
+                        # providing dummy data
+                    response = client.post("/admin", json.dumps(data))
+                        # gives above data in json format
+                        ##now we check the o/p using assert
+                    assert response.status_code == status.HTTP_200_OK
+                        # 200 ok aaucha thei ho
+                    assert response.json()["email"] == "test1@email.com"
+                        # email match check
+                    assert response.json()["is_active"] == True
+                        # is_active bool ho, thei check
+                    pass
+
+
+    we make a new file in /tests
+        conftest.py,
+            it is similar to config file,
+            but for testing
+
+
+    in conftest.py,
+        we add following
+            code:
+                from fastapi.testclient import TestClient
+                from sqlalchemy.orm import sessionmaker
+                from sqlalchemy import create_engine
+
+                import pytest
+                import os
+                import sys
+
+
+                sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                    ##we imported os and sys and gave above command to get the path of main
+                    ##do it before calling main to let know where it resides
+
+
+                from main import app
+                from database import Base, get_db
+                #from config import setting
+                #from models import Admin
+                #from hashing import Hasher
+
+
+                SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+                engine = create_engine(
+                    SQLALCHEMY_DATABASE_URL,
+                    connect_args={"check_same_thread": False}
+                )
+
+                TestingSessionLocal = sessionmaker(
+                    autocommit=False,
+                    autoflush=False,
+                    bind=engine
+                )   #using sqlite db for testing purposes only
+
+                Base.metadata.create_all(bind=engine)
+
+
+                @pytest.fixture
+                def client():
+                    def override_get_db():
+                        try:
+                            db = TestingSessionLocal()
+                                #created db object
+                            yield db
+                                #return db
+                        finally:
+                            db.close()
+
+                    app.dependency_overrides[get_db] = override_get_db
+                    client = TestClient(app)
+                    yield client
+                        #using yield instead of return
+
+    now,
+        run pytest-v,
+            o/p:
+                ====================================================================== test session starts =======================================================================
+                platform win32 -- Python 3.9.7, pytest-7.2.0, pluggy-1.0.0 -- D:\work\pythonProject\fast_post\venv\Scripts\python.exe
+                cachedir: .pytest_cache
+                rootdir: D:\work\pythonProject\inventory_management
+                plugins: anyio-3.6.1
+                collected 1 item
+
+                tests/test_adminroute.py::test_create_user PASSED                                                                                                           [100%]
+
+                ======================================================================= 1 passed in 0.39s ========================================================================
+
+        rerun,
+        pytest -v,
+            o/p:
+                FAILED tests/test_adminroute.py::test_create_user - sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: admin.email
+
+            reason:
+                in test_adminroute.py,
+                we have set
+                        data = {"email": "test132@email.com", "password": "test12"}
+
+                        and,
+                            checked the data as
+                                assert response.json()["email"] == "test132@email.com"
+
+                it looks correct right?
+                    well,
+                    we already have run test,
+                    can`t add same email again and test if added can we?
+                    so change email in both statements above before running test again
+
+        lets change it to,
+        email as e@mail.com in both statements
+        and
+        re run pytest
+
+            o/p:
+                passed
+
+    so whenever we are testing please try to alter the email
+    alter on both statements or there will be error
