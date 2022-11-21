@@ -2,11 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6076323-648d-4049-8b2e-ab129dca0808" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.coveragerc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.coverage" beforeDir="false" afterPath="$PROJECT_DIR$/.coverage" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.db" beforeDir="false" afterPath="$PROJECT_DIR$/test.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_adminroute.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_adminroute.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/config_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/coverage_html.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/d_9b0341f23a4a319f___init___py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/d_9b0341f23a4a319f_admin_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/d_9b0341f23a4a319f_items_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/d_a44f0ac069e85531_conftest_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/d_a44f0ac069e85531_test_adminroute_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/database_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/favicon_32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/hashing_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/keybd_closed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/keybd_open.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/main_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/models_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/schemas_py.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/status.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlcov/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,7 +183,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669006503957</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="hmm">
+      <created>1669007409774</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1669007409774</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
