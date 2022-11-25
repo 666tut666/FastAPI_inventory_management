@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from schemas import AdminCreate, ShowAdmin
 from database import get_db
 from hashing import Hasher
-from models import Admin
+from models import Admin, User, AdminType
 
 router=APIRouter()
 
@@ -19,7 +19,9 @@ def create_admin(
 ):
     admin = Admin(
         email=admin.email,
-        password=Hasher.get_hash_password(admin.password)
+        password=Hasher.get_hash_password(admin.password),
+        #user_id=admin.user_id,
+        #admin_type_id=admin.admin_type_id
     )
     db.add(admin)
     db.commit()

@@ -1,0 +1,133 @@
+from database import Base
+from sqlalchemy import Column, Integer, Boolean, DateTime, String, ForeignKey, Date
+from sqlalchemy_utils.types import ChoiceType
+from sqlalchemy.orm import relationship
+
+
+class User(Base):
+    __tablename__ = "user"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(50), unique=True, index=True)
+    password = Column(String(100))
+    creation_date = Column(DateTime)
+    activation_date = Column(DateTime, nullable=True)
+    role_id = Column(Integer, ForeignKey("role.id"))
+    status_type_id = Column(Integer, ForeignKey("status_type.id"))
+
+    admin = relationship(
+        "Admin",
+        uselist=False,
+        single_parent=True,
+        backref="user",
+        passive_deletes=True,
+    )
+    staff = relationship(
+        "Staff",
+        uselist=False,
+        single_parent=True,
+        backref="user",
+        passive_deletes=True,
+    )
+    sessions = relationship(
+        "Session",
+        backref="user",
+        passive_deletes=True,
+    )
+
+
+class Session(Base):
+    __tablename__ = "session"
+
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String(400))
+    creation_date = Column(DateTime)
+    status = Column(String(50))
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
+
+
+class Role(Base):
+    __tablename__ = "role"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True)
+
+    users = relationship("User", backref="role")
+
+
+class StatusType(Base):
+    __tablename__ = "status_type"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True)
+
+    users = relationship("User", backref="status_type")
+
+
+class Admin(Base):
+    __tablename__ = 'admin'
+    id = Column(Integer, primary_key=True, index=True)
+        # id should be primary key
+    email = Column(String, unique=True, nullable=False, index=True)
+        # unique as p_k is already assigned
+        # 2 ppl can`t have same email
+    password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
+    items = relationship('Items', back_populates='admin ')
+    orders = relationship('Order', back_populates='user')
+
+    def __repr__(self):
+        return f"<User {self.id}>"
+
+
+class Order(Base):
+
+    ORDER_STATUES=(
+        ('PENDING', 'pending'),
+        ('ACKNOWLEDGE', 'acknowledge'),
+        ('ACCEPT', 'accept'),
+        ('REJECT', 'reject')
+    )
+
+    __tablename__ = 'orders'
+    id = Column(Integer, primary_key=True)
+    order_status = Column(ChoiceType(choices=ORDER_STATUES), default="PENDING")
+    staff_id = Column(Integer, ForeignKey('staff.id'))
+    admin_id = relationship('Admin', back_populates='order')
+    staff = relationship('Staff', back_populates='order')
+
+    def __repr__(self):
+        return f"<Order {self.id}>"
+
+
+class Items(Base):
+    __tablename__ = "items"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False, unique=True)
+    quantity = Column(Integer, nullable=False)
+    category = Column(String)
+    type = Column(String)
+    date_posted= Column(Date)
+
+    owner_id= Column(Integer, ForeignKey('admin.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
+
+    owner = relationship('Admin', back_populates='items')
+    staff = relationship('Staff', back_populates='items')
+
+    def __repr__(self):
+        return f"<Order {self.id}>"
+
+
+class Staff(Base):
+    __tablename__ = "staff"
+
+    id = Column(Integer, primary_key=True, index=True)
+        #id should be primary key
+    email = Column(String, unique=True, nullable=False, index=True)
+        #unique as p_k is already assigned
+            #2 ppl can`t have same email
+    password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
+
+    items = relationship('Items', back_populates='owner')

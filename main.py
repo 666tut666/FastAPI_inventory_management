@@ -3,7 +3,7 @@ from database import engine
 from models import Base
 from config import setting
 from routers import admin
-from routers import items
+from routers import staff
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI(
@@ -16,7 +16,8 @@ app = FastAPI(
     }
 )
 app.include_router(admin.router)
-app.include_router(items.router)
+app.include_router(staff.router)
+
 
 @app.get("/")
 def hello():

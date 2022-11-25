@@ -17,12 +17,12 @@ def create_item(
         item: ItemCreate,
         db: Session = Depends(get_db)
 ):
-    admin_id = 1
     date_posted = datetime.now().date()
+    #owner_id = 1
     item = Items(
         **item.dict(),
         date_posted=date_posted,
-        admin_id=admin_id
+        #owner_id=owner_id
     )
     db.add(item)
     db.commit()

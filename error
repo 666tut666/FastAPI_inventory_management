@@ -1,0 +1,12 @@
+creating admin
+
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedColumn) column "user_id" of relation "admin" does not exist
+LINE 1: INSERT INTO admin (email, password, user_id, admin_type_id) ...
+                                            ^
+
+[SQL: INSERT INTO admin (email, password, user_id, admin_type_id) VALUES (%(email)s, %(password)s, %(user_id)s, %(admin_type_id)s) RETURNING admin.id]
+[parameters: {'email': 'user@example.com', 'password': '$2b$12$JGBmyG3YSLKFcWQsFJlmQ.Iw5X8b9afDIafGv34ZmAdxh.z.twb4u', 'user_id': None, 'admin_type_id': None}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+
+
+
