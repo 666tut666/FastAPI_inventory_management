@@ -11,6 +11,12 @@ class AdminCreate(BaseModel):
 
     class Config:
         orm_mode=True
+        schema_extra = {
+            'example': {
+                "email":"your@email.com",
+                "password":"yourPassword"
+            }
+        }
 
     def __repr__(self):
         return f"<Order {self.user_id}>"
