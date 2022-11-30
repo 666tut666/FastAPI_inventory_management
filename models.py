@@ -71,14 +71,14 @@ class Admin(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, nullable=False, index=True)
     password = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey("user.id"))
     admin_type_id = Column(Integer, ForeignKey("admin_type.id"))
 
-    staff = relationship(
-        "Staff",
-        backref="admin",
-        lazy=True
-    )
+    #staff = relationship(
+    #    "Staff",
+    #    backref="admin",
+    #    lazy=True
+    #)
 
 
 class AdminType(Base):
@@ -98,7 +98,6 @@ class Staff(Base):
     email = Column(String(50), unique=True, index=True)
     password = Column(String(100))
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
-    admin_id = Column(Integer, ForeignKey("admin.id"))
 
     staff_accounts = relationship(
         "StaffAccount",

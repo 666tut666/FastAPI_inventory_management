@@ -20,7 +20,7 @@ def create_admin(
     admin = Admin(
         email=admin.email,
         password=Hasher.get_hash_password(admin.password),
-        #user_id=admin.user_id,
+        #user_id=admin.user_id
         #admin_type_id=admin.admin_type_id
     )
     db.add(admin)

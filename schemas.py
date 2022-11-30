@@ -6,7 +6,7 @@ from typing import Optional
 class AdminCreate(BaseModel):
     email: EmailStr
     password: str
-    #user_id: int
+    user_id: Optional[int]
     #admin_type_id: int
 
     class Config:
@@ -17,9 +17,6 @@ class AdminCreate(BaseModel):
                 "password":"yourPassword"
             }
         }
-
-    def __repr__(self):
-        return f"<Order {self.user_id}>"
 
 
 class ShowAdmin(BaseModel):
@@ -75,11 +72,11 @@ class ShowItem(BaseModel):
 class StaffCreate(BaseModel):
     email: EmailStr
     password: str
+    #id: Optional[int]
 
 
 class ShowStaff(BaseModel):
     email: EmailStr
-    is_active: bool
 
     class Config:
         orm_mode=True
@@ -92,5 +89,6 @@ class User(BaseModel):
     password: str
     user_id: int
     admin_type_id: int
+    staff_id: int
     id: int
 
